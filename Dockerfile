@@ -16,6 +16,14 @@ ARG LANG
 
 ENV ETCDVERSION=3.3.13 CONFDVERSION=0.16.0
 
+RUN apt-get update -y \
+    && apt install -y wget \
+    && echo "deb https://packagecloud.io/timescale/timescaledb/debian/ bookworm main" | tee /etc/apt/sources.list.d/timescaledb.list \
+    && wget --quiet -O - https://packagecloud.io/timescale/timescaledb/gpgkey | gpg --dearmor -o /etc/apt/trusted.gpg.d/timescaledb.gpg \
+    && apt update -y \
+    && apt install -y  timescaledb-2-postgresql-$PG_MAJOR
+
+
 RUN set -ex \
     && export DEBIAN_FRONTEND=noninteractive \
     && echo 'APT::Install-Recommends "0";\nAPT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01norecommend \
